@@ -43,10 +43,13 @@ const BunnyAnimation = () => {
 const App = () => {
   const stageRef = useRef();
   const framesData = useRef({});
-  const [framePerSecond, setFramePerSecond] = useState(24);
-  const [videoDuration, setVideoDuration] = useState(5);
+  const durationRef = useRef(1);
+  const durationInsideSecondRef = useRef(1);
 
+  const [videoDuration, setVideoDuration] = useState(5);
+  const [framePerSecond, setFramePerSecond] = useState(24);
   const [recordingVideo, setRecordingVideo] = useState(false);
+  const [showMakeVideo, setShowMakeVideo] = useState(false);
 
   const handleOptionChange = (e) => {
     setFramePerSecond(Number(e.target.value));
@@ -62,40 +65,55 @@ const App = () => {
       const app = stageRef.current.app; // Access the Pixi Application
       const renderer = app.renderer; // Access the renderer
 
-      const captureFrame = async (next) => {
-        renderer.render(app.stage); // Render the current state to the renderer
-        const frameData = renderer.view.toDataURL(); // Capture the frame as an image
-        // console.log(frameData);
+      const captureFrameForSec = (secIdx) => {
+        const captureFrame = (milliSecondIdx) => {
+          renderer.render(app.stage); // Render the current state to the renderer
+          const frameData = renderer.view.toDataURL(); // Capture the frame as an image
+          framesData.current[secIdx][milliSecondIdx] = frameData;
+          console.log(framesData.current, secIdx, milliSecondIdx);
+          if (secIdx === videoDuration && milliSecondIdx === framePerSecond) {
+            setRecordingVideo(false);
+            setShowMakeVideo(true);
+          }
 
-        // const testApi = await fetch("http://localhost:3005/upload-frame", {
-        //   method: "POST",
-        //   body: JSON.stringify({ frameId: next }),
-        //   headers: {
-        //     "Content-type": "application/json; charset=UTF-8",
-        //   },
-        // });
-        // This is your image data URL
-        // Send this data to the server or process as needed
+          if (durationInsideSecondRef.current > framePerSecond - 1) {
+            clearInterval(frameIntervalId);
+            durationInsideSecondRef.current = 0;
+          }
+        };
+
+        framesData.current[secIdx] = {};
+
+        const frameIntervalId = setInterval(() => {
+          captureFrame(durationInsideSecondRef.current);
+          durationInsideSecondRef.current++;
+        }, 1000 / framePerSecond);
+
+        if (durationRef.current > videoDuration - 1) {
+          clearInterval(secIntervalId);
+        }
       };
 
       // Example: Capture a frame every second
-      // const intervalId = setInterval(() => {
-      //   // console.log("outside", next);
-      //   setFrameIdx((prev) => {
-      //     let next = prev + 1;
-      //     console.log("inside", next);
-      //     captureFrame(next);
-      //     return next;
-      //   });
-      // }, 1000);
-
-      // setAnimationId(intervalId);
+      const secIntervalId = setInterval(() => {
+        captureFrameForSec(durationRef.current);
+        durationRef.current++;
+      }, 1000);
     }
   };
 
-  // useEffect(() => {
-  //   return () => clearInterval(animationId); // Clean up the interval on unmount
-  // }, [animationId]);
+  const makeVideo = async () => {
+    const testApi = await fetch("http://localhost:3005/upload-frame", {
+      method: "POST",
+      body: JSON.stringify({ framesData }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+  };
+
+  // This is your image data URL
+  // Send this data to the server or process as needed
 
   return (
     <Fragment>
@@ -129,6 +147,13 @@ const App = () => {
       <Stage ref={stageRef} options={{ backgroundColor: "#1099bb" }}>
         <BunnyAnimation />
       </Stage>
+      {showMakeVideo && (
+        <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
+          <button style={{ height: 36, margin: 10 }} onClick={makeVideo}>
+            Make video
+          </button>
+        </div>
+      )}
     </Fragment>
   );
 };
