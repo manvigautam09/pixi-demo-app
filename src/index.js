@@ -1,13 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import { Application } from "pixi.js";
+import { AppProvider } from "@pixi/react";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const app = new Application({});
+
 root.render(
   <React.StrictMode>
-    <App />
+    <AppProvider app={app}>
+      <App />
+    </AppProvider>
   </React.StrictMode>
 );
 
