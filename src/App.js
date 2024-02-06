@@ -2,6 +2,8 @@ import { BlurFilter } from "pixi.js";
 import { Stage, Container, Sprite, Text, useTick } from "@pixi/react";
 import React, { Fragment, useMemo, useReducer, useRef, useState } from "react";
 
+import { base64ToBlob, saveFile } from "./utils/helpers";
+
 const BunnyAnimation = () => {
   const reducer = (_, { data }) => data;
   const blurFilter = useMemo(() => new BlurFilter(4), []);
@@ -56,7 +58,7 @@ const App = () => {
   };
 
   const handleInputChange = (e) => {
-    setVideoDuration(e.target.value);
+    setVideoDuration(Number(e.target.value));
   };
 
   const recordVideo = () => {
@@ -69,8 +71,15 @@ const App = () => {
         const captureFrame = (milliSecondIdx) => {
           renderer.render(app.stage); // Render the current state to the renderer
           const frameData = renderer.view.toDataURL(); // Capture the frame as an image
-          framesData.current[secIdx][milliSecondIdx] = frameData;
+          const blob = base64ToBlob(
+            frameData,
+            `image-${framePerSecond * (secIdx - 1) + milliSecondIdx}/png`
+          );
+
+          framesData.current[secIdx][milliSecondIdx] = blob;
           console.log(framesData.current, secIdx, milliSecondIdx);
+          console.log("### videoDuration", videoDuration);
+          console.log("### framePerSecond", framePerSecond);
           if (secIdx === videoDuration && milliSecondIdx === framePerSecond) {
             setRecordingVideo(false);
             setShowMakeVideo(true);
@@ -102,14 +111,41 @@ const App = () => {
     }
   };
 
-  const makeVideo = async () => {
-    const testApi = await fetch("http://localhost:3005/upload-frame", {
-      method: "POST",
-      body: JSON.stringify({ framesData }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
+  const wait = () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve("resolved");
+      }, 100);
     });
+
+  const makeVideo = async () => {
+    const a1 = Object.keys(framesData.current);
+
+    for (let i = 0; i < a1.length; i++) {
+      const secIdx = a1[i];
+      const a2 = Object.keys(framesData.current[secIdx]);
+
+      for (let j = 0; j < a2.length; j++) {
+        const milliSecondIdx = a2[j];
+
+        saveFile(
+          framesData.current[secIdx][milliSecondIdx],
+          `image-${
+            framePerSecond * (Number(secIdx) - 1) + Number(milliSecondIdx)
+          }.png`
+        );
+
+        await wait();
+      }
+    }
+
+    // const testApi = await fetch("http://localhost:3005/upload-frame", {
+    //   method: "POST",
+    //   body: JSON.stringify({ framesData: framesData.current }),
+    //   headers: {
+    //     "Content-type": "application/json; charset=UTF-8",
+    //   },
+    // });
   };
 
   // This is your image data URL
@@ -150,7 +186,7 @@ const App = () => {
       {showMakeVideo && (
         <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
           <button style={{ height: 36, margin: 10 }} onClick={makeVideo}>
-            Make video
+            Save Files
           </button>
         </div>
       )}
