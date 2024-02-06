@@ -48,8 +48,8 @@ const App = () => {
   const durationRef = useRef(1);
   const durationInsideSecondRef = useRef(1);
 
-  const [videoDuration, setVideoDuration] = useState(5);
-  const [framePerSecond, setFramePerSecond] = useState(24);
+  const [videoDuration, setVideoDuration] = useState(2);
+  const [framePerSecond, setFramePerSecond] = useState(48);
   const [recordingVideo, setRecordingVideo] = useState(false);
   const [showMakeVideo, setShowMakeVideo] = useState(false);
 
@@ -168,7 +168,7 @@ const App = () => {
 
         <input
           type="number"
-          min={5}
+          min={2}
           max={30}
           value={videoDuration}
           disabled={recordingVideo}
