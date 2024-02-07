@@ -4,6 +4,9 @@ import React, { Fragment, useMemo, useReducer, useRef, useState } from "react";
 
 import { base64ToBlob, saveFile } from "./utils/helpers";
 
+import Lottie from "react-lottie";
+import animationData from "./utils/animation.json";
+
 const BunnyAnimation = () => {
   const reducer = (_, { data }) => data;
   const blurFilter = useMemo(() => new BlurFilter(4), []);
@@ -61,6 +64,14 @@ const App = () => {
     setVideoDuration(Number(e.target.value));
   };
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   const recordVideo = () => {
     setRecordingVideo(true);
     if (stageRef.current) {
@@ -199,7 +210,12 @@ const App = () => {
           Download
         </button>
       </div>
-      <div ref={framesData} style={{ display: "none" }} id="frames-data"></div>
+      {/* <div ref={framesData} style={{ display: "none" }}></div> */}
+      {/* <input
+        style={{ display: "none" }}
+        value={framesData.current}
+        id="frames-data"
+      /> */}
 
       <Stage ref={stageRef} options={{ backgroundColor: "#1099bb" }}>
         <BunnyAnimation />
@@ -215,6 +231,7 @@ const App = () => {
           </button>
         </div>
       )}
+      <Lottie options={defaultOptions} height={400} width={400} />
       {/* <Stage width={800} height={600}>
         <VideoBackground videoUrl={"videos/V1reel.mp4"} />
       </Stage> */}
