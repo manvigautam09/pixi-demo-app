@@ -215,6 +215,18 @@ const App = () => {
           </button>
         </div>
       )}
+      {/* <Stage width={800} height={600}>
+        <VideoBackground videoUrl={"videos/V1reel.mp4"} />
+      </Stage> */}
+      {/* <video
+        src="videos/V1reel.mp4"
+        width={300}
+        height={300}
+        controls
+        autoPlay
+        muted
+        loop
+      ></video> */}
     </Fragment>
   );
 };
