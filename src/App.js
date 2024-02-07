@@ -72,6 +72,24 @@ const App = () => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+
+  const makeVideoFromFfmpeg = async (videoDuration, framePerSecond) => {
+    try {
+      const res = await fetch("http://localhost:3005/make-video", {
+        method: "POST",
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+        body: JSON.stringify({
+          videoDuration,
+          framePerSecond,
+          framesData: framesData.current,
+        }),
+      });
+      console.log("### res", res);
+    } catch (error) {
+      console.log("### error", error);
+    }
+  };
+
   const recordVideo = () => {
     setRecordingVideo(true);
     if (stageRef.current) {
@@ -91,9 +109,11 @@ const App = () => {
           console.log(framesData.current, secIdx, milliSecondIdx);
           console.log("### videoDuration", videoDuration);
           console.log("### framePerSecond", framePerSecond);
+
           if (secIdx === videoDuration && milliSecondIdx === framePerSecond) {
             setRecordingVideo(false);
             setShowMakeVideo(true);
+            makeVideoFromFfmpeg(videoDuration, framePerSecond);
           }
 
           if (durationInsideSecondRef.current > framePerSecond - 1) {
@@ -131,7 +151,11 @@ const App = () => {
 
   const recordVideoFromPuppeteer = async () => {
     try {
-      const res = await fetch("http://localhost:3005/record-video");
+      const res = await fetch("http://localhost:3005/record-video", {
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+        method: "POST",
+        body: JSON.stringify({ videoDuration }),
+      });
       console.log("### res", res);
     } catch (error) {
       console.log("### error", error);
