@@ -49,7 +49,7 @@ const App = () => {
   const durationInsideSecondRef = useRef(1);
 
   const [videoDuration, setVideoDuration] = useState(2);
-  const [framePerSecond, setFramePerSecond] = useState(48);
+  const [framePerSecond, setFramePerSecond] = useState(24);
   const [recordingVideo, setRecordingVideo] = useState(false);
   const [showMakeVideo, setShowMakeVideo] = useState(false);
 
@@ -118,6 +118,15 @@ const App = () => {
       }, 100);
     });
 
+  const recordVideoFromPuppeteer = async () => {
+    try {
+      const res = await fetch("http://localhost:3005/record-video");
+      console.log("### res", res);
+    } catch (error) {
+      console.log("### error", error);
+    }
+  };
+
   const makeVideo = async () => {
     const a1 = Object.keys(framesData.current);
 
@@ -175,17 +184,33 @@ const App = () => {
           onChange={handleInputChange}
           style={{ height: 18, margin: 10, paddingLeft: 10, paddingRight: 10 }}
         />
-        <button style={{ height: 36, margin: 10 }} onClick={recordVideo}>
+        <button
+          style={{ height: 36, margin: 10 }}
+          onClick={recordVideo}
+          id="record-video-button"
+        >
           Record video
         </button>
+
+        <button
+          style={{ height: 36, margin: 10 }}
+          onClick={recordVideoFromPuppeteer}
+        >
+          Download
+        </button>
       </div>
+      <div ref={framesData} style={{ display: "none" }} id="frames-data"></div>
 
       <Stage ref={stageRef} options={{ backgroundColor: "#1099bb" }}>
         <BunnyAnimation />
       </Stage>
+
       {showMakeVideo && (
         <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
-          <button style={{ height: 36, margin: 10 }} onClick={makeVideo}>
+          <button
+            style={{ height: 36, margin: 10 }}
+            onClick={recordVideoFromPuppeteer}
+          >
             Save Files
           </button>
         </div>
