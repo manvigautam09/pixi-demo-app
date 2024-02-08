@@ -1,3 +1,4 @@
+// Test URL ?duration=2?fps=24?videoId=d2d4c589-ee23-4dc5-a218-fe738e52cd6a
 import Lottie from "react-lottie";
 import { v4 as uuidv4 } from "uuid";
 import { BlurFilter } from "pixi.js";
@@ -52,14 +53,18 @@ const App = () => {
 
   const [videoDuration, setVideoDuration] = useState(
     location.search.split("?").length > 1
-      ? location.search.split("?")[1].split("=")[1]
+      ? Number(location.search.split("?")[1].split("=")[1])
       : 2
   );
   const [framePerSecond, setFramePerSecond] = useState(
     location.search.split("?").length > 1
-      ? location.search.split("?")[1].split("=")[1]
+      ? Number(location.search.split("?")[2].split("=")[1])
       : 24
   );
+  const videoId =
+    location.search.split("?").length > 1
+      ? location.search.split("?")[3].split("=")[1]
+      : null;
   const [recordingVideo, setRecordingVideo] = useState(false);
   const [showMakeVideo, setShowMakeVideo] = useState(false);
 
@@ -80,7 +85,11 @@ const App = () => {
     },
   };
 
-  const makeVideoFromFfmpeg = async (videoDuration, framePerSecond) => {
+  const makeVideoFromFfmpeg = async (
+    videoDuration,
+    framePerSecond,
+    videoId
+  ) => {
     try {
       const res = await fetch("http://localhost:3005/make-video", {
         method: "POST",
@@ -89,6 +98,7 @@ const App = () => {
           videoDuration,
           framePerSecond,
           framesData: framesData.current,
+          videoId,
         }),
       });
       console.log("### res", res);
@@ -120,7 +130,7 @@ const App = () => {
           if (secIdx === videoDuration && milliSecondIdx === framePerSecond) {
             setRecordingVideo(false);
             setShowMakeVideo(true);
-            makeVideoFromFfmpeg(videoDuration, framePerSecond);
+            makeVideoFromFfmpeg(videoDuration, framePerSecond, videoId);
           }
 
           if (durationInsideSecondRef.current > framePerSecond - 1) {

@@ -10,6 +10,15 @@ export function base64ToBlob(base64, mimeType) {
   return new Blob([int8Array], { type: mimeType });
 }
 
+export function base64ToArrayBuffer(base64) {
+  var binaryString = window.atob(base64.split(",")[1]);
+  var bytes = new Uint8Array(binaryString.length);
+  for (var i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
 export function saveFile(blob, filename) {
   const url = URL.createObjectURL(blob);
   console.log("url, filename");
