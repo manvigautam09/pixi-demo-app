@@ -1,10 +1,11 @@
+import Lottie from "react-lottie";
+import { v4 as uuidv4 } from "uuid";
 import { BlurFilter } from "pixi.js";
+import { useLocation } from "react-router-dom";
 import { Stage, Container, Sprite, Text, useTick } from "@pixi/react";
 import React, { Fragment, useMemo, useReducer, useRef, useState } from "react";
 
-import { base64ToBlob, saveFile } from "./utils/helpers";
-
-import Lottie from "react-lottie";
+import { base64ToBlob } from "./utils/helpers";
 import animationData from "./utils/animation.json";
 
 const BunnyAnimation = () => {
@@ -12,7 +13,6 @@ const BunnyAnimation = () => {
   const blurFilter = useMemo(() => new BlurFilter(4), []);
   const [motion, update] = useReducer(reducer);
   const iter = useRef(0);
-  // Listen for animate update
 
   useTick((delta) => {
     const i = (iter.current += 0.05 * delta);
@@ -21,9 +21,7 @@ const BunnyAnimation = () => {
       type: "update",
       data: {
         x: 390 + Math.sin(i) * 100,
-        // x: 390,
         y: 270 + Math.sin(i / 1.5) * 100,
-        // y: 270,
         // rotation: Math.sin(i) * Math.PI,
         // anchor: Math.sin(i / 2),
       },
@@ -50,9 +48,18 @@ const App = () => {
   const framesData = useRef({});
   const durationRef = useRef(1);
   const durationInsideSecondRef = useRef(1);
+  const location = useLocation();
 
-  const [videoDuration, setVideoDuration] = useState(2);
-  const [framePerSecond, setFramePerSecond] = useState(24);
+  const [videoDuration, setVideoDuration] = useState(
+    location.search.split("?").length > 1
+      ? location.search.split("?")[1].split("=")[1]
+      : 2
+  );
+  const [framePerSecond, setFramePerSecond] = useState(
+    location.search.split("?").length > 1
+      ? location.search.split("?")[1].split("=")[1]
+      : 24
+  );
   const [recordingVideo, setRecordingVideo] = useState(false);
   const [showMakeVideo, setShowMakeVideo] = useState(false);
 
@@ -142,58 +149,18 @@ const App = () => {
     }
   };
 
-  const wait = () =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve("resolved");
-      }, 100);
-    });
-
   const recordVideoFromPuppeteer = async () => {
     try {
       const res = await fetch("http://localhost:3005/record-video", {
         headers: { "Content-type": "application/json; charset=UTF-8" },
         method: "POST",
-        body: JSON.stringify({ videoDuration }),
+        body: JSON.stringify({ id: uuidv4(), videoDuration, framePerSecond }),
       });
       console.log("### res", res);
     } catch (error) {
       console.log("### error", error);
     }
   };
-
-  const makeVideo = async () => {
-    const a1 = Object.keys(framesData.current);
-
-    for (let i = 0; i < a1.length; i++) {
-      const secIdx = a1[i];
-      const a2 = Object.keys(framesData.current[secIdx]);
-
-      for (let j = 0; j < a2.length; j++) {
-        const milliSecondIdx = a2[j];
-
-        saveFile(
-          framesData.current[secIdx][milliSecondIdx],
-          `image-${
-            framePerSecond * (Number(secIdx) - 1) + Number(milliSecondIdx)
-          }.png`
-        );
-
-        await wait();
-      }
-    }
-
-    // const testApi = await fetch("http://localhost:3005/upload-frame", {
-    //   method: "POST",
-    //   body: JSON.stringify({ framesData: framesData.current }),
-    //   headers: {
-    //     "Content-type": "application/json; charset=UTF-8",
-    //   },
-    // });
-  };
-
-  // This is your image data URL
-  // Send this data to the server or process as needed
 
   return (
     <Fragment>
@@ -273,3 +240,31 @@ const App = () => {
 };
 
 export default App;
+// const wait = () =>
+// new Promise((resolve) => {
+//   setTimeout(() => {
+//     resolve("resolved");
+//   }, 100);
+// });
+
+// const makeVideo = async () => {
+//   const a1 = Object.keys(framesData.current);
+
+//   for (let i = 0; i < a1.length; i++) {
+//     const secIdx = a1[i];
+//     const a2 = Object.keys(framesData.current[secIdx]);
+
+//     for (let j = 0; j < a2.length; j++) {
+//       const milliSecondIdx = a2[j];
+
+//       saveFile(
+//         framesData.current[secIdx][milliSecondIdx],
+//         `image-${
+//           framePerSecond * (Number(secIdx) - 1) + Number(milliSecondIdx)
+//         }.png`
+//       );
+
+//       await wait();
+//     }
+//   }
+// };

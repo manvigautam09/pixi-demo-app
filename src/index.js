@@ -1,20 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Application } from "pixi.js";
+import { AppProvider } from "@pixi/react";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import { Application } from "pixi.js";
-import { AppProvider } from "@pixi/react";
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
-
-const app = new Application({});
+const app = new Application();
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+]);
 
 root.render(
   <React.StrictMode>
     <AppProvider app={app}>
-      <App />
+      <RouterProvider router={router} />
     </AppProvider>
   </React.StrictMode>
 );
