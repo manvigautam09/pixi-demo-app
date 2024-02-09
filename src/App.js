@@ -5,9 +5,11 @@ import { BlurFilter } from "pixi.js";
 import { useLocation } from "react-router-dom";
 import { Stage, Container, Sprite, Text, useTick } from "@pixi/react";
 import React, { Fragment, useMemo, useReducer, useRef, useState } from "react";
+import FormData from "form-data";
 
 import { base64ToBlob } from "./utils/helpers";
 import animationData from "./utils/animation.json";
+import axios from "axios";
 
 const BunnyAnimation = () => {
   const reducer = (_, { data }) => data;
@@ -91,16 +93,19 @@ const App = () => {
     videoId
   ) => {
     try {
-      const res = await fetch("http://localhost:3005/make-video", {
-        method: "POST",
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-        body: JSON.stringify({
-          videoDuration,
-          framePerSecond,
-          framesData: framesData.current,
-          videoId,
-        }),
+      const formData = new FormData();
+
+      Object.keys(framesData.current).forEach((id) => {
+        Object.keys(framesData.current[id]).forEach((idx) => {
+          formData.append("files", framesData.current[id][idx]);
+        });
       });
+
+      const res = await axios.post(
+        `http://localhost:3005/make-video?videoDuration=${videoDuration}&framePerSecond=${framePerSecond}&videoId=${videoId}`,
+        formData
+      );
+
       console.log("### res", res);
     } catch (error) {
       console.log("### error", error);
