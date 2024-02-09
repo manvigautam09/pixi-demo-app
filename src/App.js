@@ -1,50 +1,15 @@
 // Test URL ?duration=2?fps=24?videoId=d2d4c589-ee23-4dc5-a218-fe738e52cd6a
+import React, { Fragment, useRef, useState } from "react";
 import Lottie from "react-lottie";
 import { v4 as uuidv4 } from "uuid";
-import { BlurFilter } from "pixi.js";
+import { Stage } from "@pixi/react";
 import { useLocation } from "react-router-dom";
-import { Stage, Container, Sprite, Text, useTick } from "@pixi/react";
-import React, { Fragment, useMemo, useReducer, useRef, useState } from "react";
 import FormData from "form-data";
 
 import { base64ToBlob } from "./utils/helpers";
 import animationData from "./utils/animation.json";
 import axios from "axios";
-
-const BunnyAnimation = () => {
-  const reducer = (_, { data }) => data;
-  const blurFilter = useMemo(() => new BlurFilter(4), []);
-  const [motion, update] = useReducer(reducer);
-  const iter = useRef(0);
-
-  useTick((delta) => {
-    const i = (iter.current += 0.05 * delta);
-
-    update({
-      type: "update",
-      data: {
-        x: 390 + Math.sin(i) * 100,
-        y: 270 + Math.sin(i / 1.5) * 100,
-        // rotation: Math.sin(i) * Math.PI,
-        // anchor: Math.sin(i / 2),
-      },
-    });
-  });
-
-  return (
-    <>
-      <Sprite image="https://pixijs.io/pixi-react/img/bunny.png" {...motion} />
-
-      <Container x={400} y={330}>
-        <Text
-          text="Hello World"
-          anchor={{ x: 0.5, y: 0.5 }}
-          filters={[blurFilter]}
-        />
-      </Container>
-    </>
-  );
-};
+import BunnyAnimation from "./components/BunnyAnimation";
 
 const App = () => {
   const stageRef = useRef();
@@ -255,31 +220,3 @@ const App = () => {
 };
 
 export default App;
-// const wait = () =>
-// new Promise((resolve) => {
-//   setTimeout(() => {
-//     resolve("resolved");
-//   }, 100);
-// });
-
-// const makeVideo = async () => {
-//   const a1 = Object.keys(framesData.current);
-
-//   for (let i = 0; i < a1.length; i++) {
-//     const secIdx = a1[i];
-//     const a2 = Object.keys(framesData.current[secIdx]);
-
-//     for (let j = 0; j < a2.length; j++) {
-//       const milliSecondIdx = a2[j];
-
-//       saveFile(
-//         framesData.current[secIdx][milliSecondIdx],
-//         `image-${
-//           framePerSecond * (Number(secIdx) - 1) + Number(milliSecondIdx)
-//         }.png`
-//       );
-
-//       await wait();
-//     }
-//   }
-// };
