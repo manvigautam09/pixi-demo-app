@@ -1,15 +1,17 @@
 // Test URL ?duration=2?fps=24?videoId=d2d4c589-ee23-4dc5-a218-fe738e52cd6a
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie";
 import { v4 as uuidv4 } from "uuid";
 import { Stage } from "@pixi/react";
 import { useLocation } from "react-router-dom";
 import FormData from "form-data";
+import * as PIXI from "pixi.js";
 
 import { base64ToBlob } from "./utils/helpers";
 import animationData from "./utils/animation.json";
 import axios from "axios";
 import BunnyAnimation from "./components/BunnyAnimation";
+import VideoBackground from "./components/VideoBackground";
 
 const App = () => {
   const stageRef = useRef();
@@ -17,6 +19,7 @@ const App = () => {
   const durationRef = useRef(1);
   const durationInsideSecondRef = useRef(1);
   const location = useLocation();
+  const [videoTexture, setVideoTexture] = useState(null);
 
   const [videoDuration, setVideoDuration] = useState(
     location.search.split("?").length > 1
@@ -142,6 +145,18 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    const video = document.createElement("video");
+    video.src = "videos/V1reel.mp4";
+    video.loop = true;
+    video.muted = true;
+    video.controls = true;
+    video.width = 300;
+    video.height = 300;
+    const texture = PIXI.Texture.from(video);
+    setVideoTexture(texture);
+  }, []);
+
   return (
     <Fragment>
       <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
@@ -203,10 +218,14 @@ const App = () => {
         </div>
       )}
       <Lottie options={defaultOptions} height={400} width={400} />
-      {/* <Stage width={800} height={600}>
-        <VideoBackground videoUrl={"videos/V1reel.mp4"} />
-      </Stage> */}
-      {/* <video
+
+      {videoTexture !== null && (
+        <Stage width={1080} height={1920}>
+          <VideoBackground videoTexture={videoTexture} />
+        </Stage>
+      )}
+
+      <video
         src="videos/V1reel.mp4"
         width={300}
         height={300}
@@ -214,7 +233,7 @@ const App = () => {
         autoPlay
         muted
         loop
-      ></video> */}
+      ></video>
     </Fragment>
   );
 };
