@@ -19,7 +19,6 @@ const App = () => {
   const durationRef = useRef(1);
   const durationInsideSecondRef = useRef(1);
   const location = useLocation();
-  const [videoTexture, setVideoTexture] = useState(null);
 
   const [videoDuration, setVideoDuration] = useState(
     location.search.split("?").length > 1
@@ -145,18 +144,6 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    const video = document.createElement("video");
-    video.src = "videos/V1reel.mp4";
-    video.loop = true;
-    video.muted = true;
-    video.controls = true;
-    video.width = 300;
-    video.height = 300;
-    const texture = PIXI.Texture.from(video);
-    setVideoTexture(texture);
-  }, []);
-
   return (
     <Fragment>
       <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
@@ -218,12 +205,7 @@ const App = () => {
         </div>
       )}
       <Lottie options={defaultOptions} height={400} width={400} />
-
-      {videoTexture !== null && (
-        <Stage width={1080} height={1920}>
-          <VideoBackground videoTexture={videoTexture} />
-        </Stage>
-      )}
+      <VideoBackground />
 
       <video
         src="videos/V1reel.mp4"
