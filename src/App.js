@@ -1,14 +1,12 @@
 // Test URL ?duration=2?fps=24?videoId=d2d4c589-ee23-4dc5-a218-fe738e52cd6a
 import React, { Fragment, useRef, useState } from "react";
 import axios from "axios";
-import Lottie from "react-lottie";
 import { v4 as uuidv4 } from "uuid";
 import { Stage } from "@pixi/react";
 import FormData from "form-data";
 import { useLocation } from "react-router-dom";
 
 import { base64ToBlob } from "./utils/helpers";
-import animationData from "./utils/animation.json";
 import BunnyAnimation from "./components/BunnyAnimation";
 import VideoBackground from "./components/VideoBackground";
 
@@ -44,14 +42,14 @@ const App = () => {
     setVideoDuration(Number(e.target.value));
   };
 
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
+  // const defaultOptions = {
+  //   loop: true,
+  //   autoplay: true,
+  //   animationData: animationData,
+  //   rendererSettings: {
+  //     preserveAspectRatio: "xMidYMid slice",
+  //   },
+  // };
 
   const makeVideoFromFfmpeg = async (
     videoDuration,
@@ -182,11 +180,9 @@ const App = () => {
           Download
         </button>
       </div>
-
       <Stage ref={stageRef} options={{ backgroundColor: "#1099bb" }}>
         <BunnyAnimation />
       </Stage>
-
       {showMakeVideo && (
         <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
           <button
@@ -197,9 +193,9 @@ const App = () => {
           </button>
         </div>
       )}
-      <Lottie options={defaultOptions} height={400} width={400} />
       <VideoBackground />
 
+      {/* // LottieAnimation <Lottie options={defaultOptions} height={400} width={400} /> */}
       <video
         src="videos/V1reel.mp4"
         width={300}

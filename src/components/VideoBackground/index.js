@@ -25,7 +25,8 @@ const VideoBackground = () => {
         <Sprite texture={videoTexture} scale={("0.25", "0.25")} />
       </Stage>
       <div style={{ height: 30, width: 30 }}>
-        <LottieAnimation lottieJsonUrl="https://assets1.lottiefiles.com/packages/lf20_RkWAMt.json" />
+        {/* lottieJsonUrl="https://assets1.lottiefiles.com/packages/lf20_RkWAMt.json" */}
+        <LottieAnimation lottieJsonUrl="http://localhost:3005/json-data" />
       </div>
     </div>
   ) : (
