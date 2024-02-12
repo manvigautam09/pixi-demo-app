@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import * as PIXI from "pixi.js";
 import { Sprite, Stage } from "@pixi/react";
 
+import LottieAnimation from "../LottieAnimation";
+
 const VideoBackground = () => {
   const [videoTexture, setVideoTexture] = useState(null);
 
@@ -18,9 +20,14 @@ const VideoBackground = () => {
   }, []);
 
   return videoTexture !== null ? (
-    <Stage width={320} height={500}>
-      <Sprite texture={videoTexture} scale={("0.25", "0.25")} />
-    </Stage>
+    <div style={{ position: "relative" }}>
+      <Stage width={320} height={500} options={{ backgroundColor: "white" }}>
+        <Sprite texture={videoTexture} scale={("0.25", "0.25")} />
+      </Stage>
+      <div style={{ height: 30, width: 30 }}>
+        <LottieAnimation lottieJsonUrl="https://assets1.lottiefiles.com/packages/lf20_RkWAMt.json" />
+      </div>
+    </div>
   ) : (
     <div>Loading Video...</div>
   );
