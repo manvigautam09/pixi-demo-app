@@ -18,8 +18,8 @@ const VideoBackground = () => {
   }, []);
 
   return videoTexture !== null ? (
-    <Stage width={1080} height={1920}>
-      <Sprite texture={videoTexture} />
+    <Stage width={320} height={500}>
+      <Sprite texture={videoTexture} scale={("0.25", "0.25")} />
     </Stage>
   ) : (
     <div>Loading Video...</div>
