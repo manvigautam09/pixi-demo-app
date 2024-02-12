@@ -196,7 +196,7 @@ const App = () => {
       <VideoBackground />
 
       {/* // LottieAnimation <Lottie options={defaultOptions} height={400} width={400} /> */}
-      <video
+      {/* <video
         src="videos/V1reel.mp4"
         width={300}
         height={300}
@@ -204,7 +204,7 @@ const App = () => {
         autoPlay
         muted
         loop
-      ></video>
+      ></video> */}
     </Fragment>
   );
 };
