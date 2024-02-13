@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import { base64ToBlob } from "./utils/helpers";
 import BunnyAnimation from "./components/BunnyAnimation";
 import VideoBackground from "./components/VideoBackground";
+import LottieReact from "./components/LottieReact";
 
 const App = () => {
   const stageRef = useRef();
@@ -195,7 +196,7 @@ const App = () => {
         </div>
       )}
       <VideoBackground />
-
+      <LottieReact />
       {/* // LottieAnimation <Lottie options={defaultOptions} height={400} width={400} /> */}
       {/* <video
         src="videos/V1reel.mp4"
