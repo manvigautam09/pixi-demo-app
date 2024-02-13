@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import * as PIXI from "pixi.js";
-import lottie from "lottie-web";
+import { useEffect } from "react";
+// import * as PIXI from "pixi.js";
+// import lottie from "lottie-web";
 // import { AnimatedSprite, Container, Stage, Text } from "@pixi/react";
 
-import animationData from "../../utils/animation.json";
+// import animationData from "../../utils/animation.json";
 
 const LottieAnimationWithPixi = () => {
   // const [textures, setTextures] = useState([]);
