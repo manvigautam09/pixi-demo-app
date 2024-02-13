@@ -10,6 +10,7 @@ import { base64ToBlob } from "./utils/helpers";
 import BunnyAnimation from "./components/BunnyAnimation";
 import VideoBackground from "./components/VideoBackground";
 import LottieReact from "./components/LottieReact";
+// import LottieAnimationWithPixi from "./components/LottieAnimationWithPixi";
 
 const App = () => {
   const stageRef = useRef();
@@ -144,6 +145,7 @@ const App = () => {
 
   return (
     <Fragment>
+      {/* <LottieAnimationWithPixi /> */}
       <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
         <select
           value={framePerSecond}
