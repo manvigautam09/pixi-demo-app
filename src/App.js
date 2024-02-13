@@ -2,7 +2,7 @@
 import React, { Fragment, useRef, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { Stage } from "@pixi/react";
+import { Stage, Text } from "@pixi/react";
 import FormData from "form-data";
 import { useLocation } from "react-router-dom";
 
@@ -182,6 +182,7 @@ const App = () => {
       </div>
       <Stage ref={stageRef} options={{ backgroundColor: "#1099bb" }}>
         <BunnyAnimation />
+        <Text text="Loading.." />
       </Stage>
       {showMakeVideo && (
         <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
