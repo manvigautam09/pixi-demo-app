@@ -4,8 +4,8 @@ import { Player, Controls } from "@lottiefiles/react-lottie-player";
 const LottieReact = () => {
   return (
     <Player
-      autoplay={false}
-      loop={false}
+      autoplay
+      loop
       src="https://assets3.lottiefiles.com/packages/lf20_UJNc2t.json"
       style={{ height: "300px", width: "300px" }}
     >
