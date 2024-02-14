@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 import lottie from "lottie-web";
 import { AnimatedSprite, Container, Stage, Text } from "@pixi/react";
 
-import animationData from "../../utils/animation.json";
+// import animationData from "../../utils/animation.json";
 
 const LottieAnimationWithPixi = () => {
   const [textures, setTextures] = useState([]);
@@ -11,7 +11,7 @@ const LottieAnimationWithPixi = () => {
   function renderLottieFramesToTextures() {
     const frames = [];
     const offScreenCanvas = document.createElement("canvas");
-    const context = offScreenCanvas.getContext("2d");
+    // const context = offScreenCanvas.getContext("2d");
     const animation = lottie.loadAnimation({
       container: offScreenCanvas,
       renderer: "canvas",
