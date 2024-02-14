@@ -1,9 +1,9 @@
 // Test URL ?duration=2?fps=24?videoId=d2d4c589-ee23-4dc5-a218-fe738e52cd6a
 import React, { Fragment, useRef, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { Stage, Text } from "@pixi/react";
-import FormData from "form-data";
+// import FormData from "form-data";
 import { useLocation } from "react-router-dom";
 
 import { base64ToBlob } from "./utils/helpers";
@@ -53,30 +53,30 @@ const App = () => {
   //   },
   // };
 
-  const makeVideoFromFfmpeg = async (
-    videoDuration,
-    framePerSecond,
-    videoId
-  ) => {
-    try {
-      const formData = new FormData();
+  // const makeVideoFromFfmpeg = async (
+  //   videoDuration,
+  //   framePerSecond,
+  //   videoId
+  // ) => {
+  //   try {
+  //     const formData = new FormData();
 
-      Object.keys(framesData.current).forEach((id) => {
-        Object.keys(framesData.current[id]).forEach((idx) => {
-          formData.append("files", framesData.current[id][idx]);
-        });
-      });
+  //     Object.keys(framesData.current).forEach((id) => {
+  //       Object.keys(framesData.current[id]).forEach((idx) => {
+  //         formData.append("files", framesData.current[id][idx]);
+  //       });
+  //     });
 
-      const res = await axios.post(
-        `http://localhost:3005/make-video?videoDuration=${videoDuration}&framePerSecond=${framePerSecond}&videoId=${videoId}`,
-        formData
-      );
+  //     const res = await axios.post(
+  //       `http://localhost:3005/make-video?videoDuration=${videoDuration}&framePerSecond=${framePerSecond}&videoId=${videoId}`,
+  //       formData
+  //     );
 
-      console.log("### res", res);
-    } catch (error) {
-      console.log("### error", error);
-    }
-  };
+  //     console.log("### res", res);
+  //   } catch (error) {
+  //     console.log("### error", error);
+  //   }
+  // };
 
   const recordVideo = () => {
     setRecordingVideo(true);
@@ -97,11 +97,21 @@ const App = () => {
           console.log(framesData.current, secIdx, milliSecondIdx);
           console.log("### videoDuration", videoDuration);
           console.log("### framePerSecond", framePerSecond);
+          const framesDiv = document.getElementById("frames-list");
+          const li = document.createElement("li");
+          li.appendChild(document.createTextNode(frameData));
+          li.id = `image-${framePerSecond * (secIdx - 1) + milliSecondIdx}.png`;
+          framesDiv.appendChild(li);
 
           if (secIdx === videoDuration && milliSecondIdx === framePerSecond) {
             setRecordingVideo(false);
             setShowMakeVideo(true);
-            makeVideoFromFfmpeg(videoDuration, framePerSecond, videoId);
+            // makeVideoFromFfmpeg(videoDuration, framePerSecond, videoId);
+            const frameRecordedDiv = document.createElement("div");
+            frameRecordedDiv.id = `id-${videoId}`;
+            frameRecordedDiv.innerHTML = "Video recorded";
+            document.body.appendChild(frameRecordedDiv);
+            frameRecordedDiv.style.display = "none";
           }
 
           if (durationInsideSecondRef.current > framePerSecond - 1) {
@@ -147,6 +157,7 @@ const App = () => {
     <Fragment>
       {/* <LottieAnimationWithPixi /> */}
       <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
+        <div id="frames-list" style={{ display: "none" }}></div>
         <select
           value={framePerSecond}
           onChange={handleOptionChange}
