@@ -5,15 +5,20 @@ import { AppProvider } from "@pixi/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import "./index.css";
-import App from "./App";
+import Home from "./routes/Home";
+import App from "./routes/Demos";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const app = new Application();
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/demos",
     element: <App />,
+  },
+  {
+    path: "/",
+    element: <Home />,
   },
 ]);
 

@@ -6,11 +6,12 @@ import { Stage, Text } from "@pixi/react";
 // import FormData from "form-data";
 import { useLocation } from "react-router-dom";
 
-import { base64ToBlob } from "./utils/helpers";
-import BunnyAnimation from "./components/BunnyAnimation";
-import VideoBackground from "./components/VideoBackground";
-import LottieReact from "./components/LottieReact";
-// import LottieAnimationWithPixi from "./components/LottieAnimationWithPixi";
+import { base64ToBlob } from "../../utils/helpers";
+import BunnyAnimation from "../../components/BunnyAnimation";
+import VideoBackground from "../../components/VideoBackground";
+import LottieReact from "../../components/LottieReact";
+import LottieAnimationWithPixi from "../../components/LottieAnimationWithPixi";
+import LottieAnimation from "../../components/LottieAnimation";
 
 const App = () => {
   const stageRef = useRef();
@@ -155,7 +156,7 @@ const App = () => {
 
   return (
     <Fragment>
-      {/* <LottieAnimationWithPixi /> */}
+      <LottieAnimationWithPixi />
       <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
         <div id="frames-list" style={{ display: "none" }}></div>
         <select
@@ -194,10 +195,17 @@ const App = () => {
           Download
         </button>
       </div>
-      <Stage ref={stageRef} options={{ backgroundColor: "#1099bb" }}>
-        <BunnyAnimation />
-        <Text text="Loading.." />
-      </Stage>
+      <div style={{ position: "relative" }}>
+        <Stage ref={stageRef} options={{ backgroundColor: "#1099bb" }}>
+          <BunnyAnimation />
+          <Text text="Loading.." />
+        </Stage>
+        <div style={{ height: 30, width: 30 }}>
+          {/* lottieJsonUrl="https://assets1.lottiefiles.com/packages/lf20_RkWAMt.json" */}
+          <LottieAnimation lottieJsonUrl="http://localhost:3005/json-data" />
+        </div>
+      </div>
+
       {showMakeVideo && (
         <div style={{ display: "flex", flexDirection: "column", width: 500 }}>
           <button
